@@ -72,7 +72,7 @@ def central_pcb():
         ),
     ]
 
-    hole_rect_offset = screw_hole_margin + C.pcb_screw_diameter / 2
+    hole_rect_offset = screw_hole_margin + C.central_pcb_screw_diameter / 2
 
     hole_rect_length = length - hole_rect_offset * 2
     hole_rect_width = width - hole_rect_offset * 2
@@ -85,7 +85,7 @@ def central_pcb():
         .transformed(offset=(hole_rect_offset, hole_rect_offset, 0))
         .rect(hole_rect_length, hole_rect_width, forConstruction=True, centered=False)
         .vertices("<X and >Y or >X and <Y")
-        .hole(C.pcb_screw_diameter)
+        .hole(C.central_pcb_screw_diameter)
     )
 
     result = base
