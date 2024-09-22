@@ -2,8 +2,8 @@
 import cadquery
 
 from allboard import entrypoint
-from allboard.constants import C
 from allboard.cq_utils import tbox
+from allboard.parts import central_pcb_screw
 
 STL = 1
 DXF = 1
@@ -72,7 +72,7 @@ def central_pcb():
         ),
     ]
 
-    hole_rect_offset = screw_hole_margin + C.central_pcb_screw_diameter / 2
+    hole_rect_offset = screw_hole_margin + central_pcb_screw.diameter / 2
 
     hole_rect_length = length - hole_rect_offset * 2
     hole_rect_width = width - hole_rect_offset * 2
@@ -85,7 +85,7 @@ def central_pcb():
         .transformed(offset=(hole_rect_offset, hole_rect_offset, 0))
         .rect(hole_rect_length, hole_rect_width, forConstruction=True, centered=False)
         .vertices("<X and >Y or >X and <Y")
-        .hole(C.central_pcb_screw_diameter)
+        .hole(central_pcb_screw.diameter)
     )
 
     result = base

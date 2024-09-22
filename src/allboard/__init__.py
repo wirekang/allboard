@@ -45,7 +45,6 @@ def export():
         module = importlib.import_module(f"allboard.parts.{part}")
         make = getattr(module, part, None)
         if make is None:
-            print("ERROR::::", part, f"has no `def {part}`")
             continue
 
         obj: Any = make()

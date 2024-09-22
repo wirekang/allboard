@@ -1,0 +1,19 @@
+{
+	"Parts Template": {
+		"scope": "python",
+		"prefix": "partstemplate",
+		"body": [
+			"# %%",
+			"import cadquery",
+			"",
+			"from allboard import entrypoint",
+			"",
+			"",
+			"def $TM_FILENAME_BASE():",
+			"    return cadquery.Workplane()",
+			"",
+			"",
+			"entrypoint($TM_FILENAME_BASE())",
+		]
+	}
+}
