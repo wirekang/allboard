@@ -109,7 +109,7 @@ def mainboard():
     for l, w, h, x, y in extensions:
         result = result.union(tbox(l, w, h + height, (x, y), False))
 
-    return result
+    return result.translate((-length / 2, -width / 2))
 
 
 entrypoint(mainboard())

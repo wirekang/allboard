@@ -9,7 +9,7 @@ from allboard.parts import magnet1
 def magnet1_cutout(
     bottom_margin=-0.15,
     top_margin=0.15,
-    height_margin=0,
+    height_margin=0.0,
 ):
     return tapered_cylinder(
         magnet1.diameter + bottom_margin,
