@@ -32,8 +32,5 @@ allow-direct-references = true
 [tool.hatch.build.targets.wheel]
 packages = ["src/allboard"]
 
-[tool.black]
-line-length = 79
-
 [project.scripts]
 export = "allboard:export"

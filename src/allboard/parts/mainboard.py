@@ -3,7 +3,7 @@ import cadquery
 
 from allboard import entrypoint
 from allboard.cq_utils import tbox
-from allboard.parts import central_pcb_screw
+from allboard.parts import mainboard_screw
 
 STL = 1
 DXF = 1
@@ -45,10 +45,22 @@ reset_x = 27
 reset_y = 5
 
 
-def central_pcb():
+def mainboard():
     extensions = [
-        (usb_port_length, usb_port_width, usb_port_height, usb_port1_x, usb_port1_y),
-        (usb_port_length, usb_port_width, usb_port_height, usb_port2_x, usb_port2_y),
+        (
+            usb_port_length,
+            usb_port_width,
+            usb_port_height,
+            usb_port1_x,
+            usb_port1_y,
+        ),
+        (
+            usb_port_length,
+            usb_port_width,
+            usb_port_height,
+            usb_port2_x,
+            usb_port2_y,
+        ),
         (
             connectors_length,
             connectors_width,
@@ -72,7 +84,7 @@ def central_pcb():
         ),
     ]
 
-    hole_rect_offset = screw_hole_margin + central_pcb_screw.diameter / 2
+    hole_rect_offset = screw_hole_margin + mainboard_screw.diameter / 2
 
     hole_rect_length = length - hole_rect_offset * 2
     hole_rect_width = width - hole_rect_offset * 2
@@ -83,16 +95,21 @@ def central_pcb():
         .faces("+Z")
         .workplane()
         .transformed(offset=(hole_rect_offset, hole_rect_offset, 0))
-        .rect(hole_rect_length, hole_rect_width, forConstruction=True, centered=False)
+        .rect(
+            hole_rect_length,
+            hole_rect_width,
+            forConstruction=True,
+            centered=False,
+        )
         .vertices("<X and >Y or >X and <Y")
-        .hole(central_pcb_screw.diameter)
+        .hole(mainboard_screw.diameter)
     )
 
     result = base
     for l, w, h, x, y in extensions:
-        result = result.union(tbox(l, w, h + height, (x, y)))
+        result = result.union(tbox(l, w, h + height, (x, y), False))
 
     return result
 
 
-entrypoint(central_pcb())
+entrypoint(mainboard())
