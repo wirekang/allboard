@@ -7,22 +7,22 @@ import glob
 import importlib
 from os.path import dirname, basename, join
 
-__cmds = []
+cli = []
 
 
 def entrypoint(*objs):
-    if "export" in __cmds:
+    if len(cli) > 0:
         return
 
     from ocp_vscode import show, set_port, set_defaults, Camera
 
     set_port(3939)
-    set_defaults(reset_camera=Camera.CENTER)
+    set_defaults(reset_camera=Camera.KEEP)
     show(*objs)
 
 
 def export():
-    __cmds.append("export")
+    cli.append(True)
     print("export\n")
     TYPES = [
         ("STL", "stl"),
