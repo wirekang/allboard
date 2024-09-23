@@ -1,6 +1,6 @@
 # %%
-import cadquery
 
+from cadquery import Workplane
 from allboard import entrypoint
 from allboard.cq_utils import tbox
 from allboard.parts import mainboard_screw
@@ -45,7 +45,7 @@ reset_x = 27
 reset_y = 5
 
 
-def mainboard():
+def make():
     extensions = [
         (
             usb_port_length,
@@ -90,7 +90,7 @@ def mainboard():
     hole_rect_width = width - hole_rect_offset * 2
 
     base = (
-        cadquery.Workplane()
+        Workplane()
         .box(length, width, height, centered=False)
         .faces("+Z")
         .workplane()
@@ -112,4 +112,4 @@ def mainboard():
     return result.translate((-length / 2, -width / 2))
 
 
-entrypoint(mainboard())
+entrypoint(make())

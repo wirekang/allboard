@@ -4,16 +4,15 @@
 		"prefix": "partstemplate",
 		"body": [
 			"# %%",
-			"import cadquery",
-			"",
+			"from cadquery import Workplane",
 			"from allboard import entrypoint",
 			"",
 			"",
-			"def $TM_FILENAME_BASE():",
-			"    return cadquery.Workplane()",
+			"def make():",
+			"    return Workplane()",
 			"",
 			"",
-			"entrypoint($TM_FILENAME_BASE())",
+			"entrypoint(make())",
 		]
 	}
 }

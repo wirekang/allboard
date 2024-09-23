@@ -7,11 +7,11 @@ import glob
 import importlib
 from os.path import dirname, basename, join
 
-cli = []
+CLI = False
 
 
 def entrypoint(*objs):
-    if len(cli) > 0:
+    if CLI:
         return
 
     from ocp_vscode import show, set_port, set_defaults, Camera
@@ -22,7 +22,8 @@ def entrypoint(*objs):
 
 
 def export():
-    cli.append(True)
+    global CLI
+    CLI = True
     print("export\n")
     TYPES = [
         ("STL", "stl"),
@@ -34,8 +35,6 @@ def export():
     parser.add_argument("-f", "--force", action="store_true")
     args = parser.parse_args()
 
-    FORCE = args.force
-
     files = glob.glob(join(dirname(__file__), "parts", "*.py"))
 
     for file in files:
@@ -43,7 +42,7 @@ def export():
         if part.startswith("_"):
             continue
         module = importlib.import_module(f"allboard.parts.{part}")
-        make = getattr(module, part, None)
+        make = getattr(module, "make", None)
         if make is None:
             continue
 
@@ -57,7 +56,7 @@ def export():
             if hasattr(module, attr) and getattr(module, attr):
                 fname = f"{OUT}/{part}.{ext}"
                 print(part.ljust(50), ext.ljust(5), end=" ")
-                if not FORCE:
+                if not args.force:
                     try:
                         target_time = getmtime(fname)
                     except FileNotFoundError:

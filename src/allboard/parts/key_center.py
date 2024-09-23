@@ -1,6 +1,6 @@
 # %%
-import cadquery
 
+from cadquery import Workplane
 from allboard import entrypoint
 from allboard.parts import magnet1, magnet1_cutout
 
@@ -24,12 +24,12 @@ magnet_margin_bottom = 0.1
 magnet_margin_top = 0.3
 
 
-def key_center():
+def make():
     base = (
-        cadquery.Workplane()
+        Workplane()
         .cylinder(height, diameter / 2, centered=False)
         .cut(
-            cadquery.Workplane(
+            Workplane(
                 origin=(rim_thickness, rim_thickness, height - rim_height)
             ).cylinder(99, diameter / 2 - rim_thickness, centered=False)
         )
@@ -37,12 +37,12 @@ def key_center():
 
     def post(xm=1):
         return (
-            cadquery.Workplane()
+            Workplane()
             .box(post_length, post_width, post_height)
             .edges("not <Z")
             .fillet(fillet)
             .cut(
-                magnet1_cutout.magnet1_cutout(
+                magnet1_cutout.make(
                     magnet_margin_bottom,
                     magnet_margin_top,
                     magnet_margin_height,
@@ -72,7 +72,7 @@ def key_center():
         )
 
     post_base = (
-        cadquery.Workplane()
+        Workplane()
         .box(
             diameter - post_margin * 2 - rim_thickness * 2 - fillet * 3,
             post_width,
@@ -84,4 +84,4 @@ def key_center():
     return base.union(post(-1)).union(post()).union(post_base)
 
 
-entrypoint(key_center())
+entrypoint(make())

@@ -8,12 +8,12 @@ STL = 1
 height = 3.8
 
 
-def mainboard_spacer():
+def make():
 
     return (
-        mainboard.mainboard()
+        mainboard.make()
         .faces("<Z")
-        .cut(mainboard.mainboard().translate((0, 0, -mainboard.height)))
+        .cut(mainboard.make().translate((0, 0, -mainboard.height)))
         .faces("<Z")
         .wires()
         .toPending()
@@ -21,4 +21,4 @@ def mainboard_spacer():
     )
 
 
-entrypoint(mainboard_spacer())
+entrypoint(make())
