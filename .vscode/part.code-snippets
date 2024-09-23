@@ -5,14 +5,14 @@
 		"body": [
 			"# %%",
 			"from cadquery import Workplane",
-			"from allboard import entrypoint",
+			"from allboard import vscode_main",
 			"",
 			"",
 			"def make():",
 			"    return Workplane()",
 			"",
 			"",
-			"entrypoint(make())",
+			"vscode_main(make())",
 		]
 	}
 }

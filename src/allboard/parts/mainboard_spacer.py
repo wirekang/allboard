@@ -1,6 +1,6 @@
 # %%
 
-from allboard import entrypoint
+from allboard import vscode_main
 import allboard.parts.mainboard as mainboard
 
 STL = 1
@@ -21,4 +21,4 @@ def make():
     )
 
 
-entrypoint(make())
+vscode_main(make())

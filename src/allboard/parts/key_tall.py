@@ -2,14 +2,14 @@
 from allboard import vscode_main
 from allboard.parts import vertical_key
 
-
 STL = 1
+
 
 def make():
     return vertical_key.make(
         length=13,
-        width=5,
-        angle=0,
+        width=11,
+        angle=11,
         post_width=10,
         post_groove_width=0.75,
         post_groove_height=0.75,

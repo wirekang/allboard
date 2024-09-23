@@ -1,5 +1,6 @@
 import argparse
 from genericpath import getmtime
+import inspect
 import time
 from typing import Any
 import cadquery as cq
@@ -10,7 +11,7 @@ from os.path import dirname, basename, join
 CLI = False
 
 
-def entrypoint(*objs):
+def vscode_main(*args, **kwargs):
     if CLI:
         return
 
@@ -18,7 +19,7 @@ def entrypoint(*objs):
 
     set_port(3939)
     set_defaults(reset_camera=Camera.KEEP)
-    show(*objs)
+    show(*args, **kwargs)
 
 
 def export():
@@ -46,11 +47,8 @@ def export():
         if make is None:
             continue
 
-        obj: Any = make()
-        if isinstance(obj, cq.Assembly):
-            obj = obj.toCompound()
-
         source_time = getmtime(file)
+        obj = None
 
         for attr, ext in TYPES:
             if hasattr(module, attr) and getattr(module, attr):
@@ -66,6 +64,11 @@ def export():
                         continue
 
                 start = time.time_ns()
+
+                if not obj:
+                    obj = make()
+                    if isinstance(obj, cq.Assembly):
+                        obj = obj.toCompound()
                 cq.exporters.export(obj, fname)
                 print(int((time.time_ns() - start) / 1000000))
     return 0

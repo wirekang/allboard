@@ -1,7 +1,7 @@
 # %%
 
 from cadquery import Workplane
-from allboard import entrypoint
+from allboard import vscode_main
 from allboard.parts import magnet1, magnet1_cutout
 
 STL = 1
@@ -46,15 +46,7 @@ def make():
                     magnet_margin_bottom,
                     magnet_margin_top,
                     magnet_margin_height,
-                ).translate(
-                    (
-                        0,
-                        0,
-                        post_height / 2
-                        - magnet1.height / 2
-                        - magnet_margin_height,
-                    )
-                )
+                ).translate((0, 0, post_height / 2))
             )
             .translate(
                 (
@@ -84,4 +76,4 @@ def make():
     return base.union(post(-1)).union(post()).union(post_base)
 
 
-entrypoint(make())
+vscode_main(make())

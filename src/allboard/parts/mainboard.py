@@ -1,7 +1,7 @@
 # %%
 
 from cadquery import Workplane
-from allboard import entrypoint
+from allboard import vscode_main
 from allboard.cq_utils import tbox
 from allboard.parts import mainboard_screw
 
@@ -112,4 +112,4 @@ def make():
     return result.translate((-length / 2, -width / 2))
 
 
-entrypoint(make())
+vscode_main(make())
