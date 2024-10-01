@@ -112,4 +112,4 @@ def make():
     return result.translate((-length / 2, -width / 2))
 
 
-vscode_main(make())
+vscode_main(make)

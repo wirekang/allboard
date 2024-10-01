@@ -21,4 +21,4 @@ def make():
     )
 
 
-vscode_main(make())
+vscode_main(make)

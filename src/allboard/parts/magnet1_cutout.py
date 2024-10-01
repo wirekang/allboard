@@ -18,4 +18,4 @@ def make(
     ).translate((0, 0, -height))
 
 
-vscode_main(make())
+vscode_main(make)

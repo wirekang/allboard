@@ -6,13 +6,13 @@ from allboard.parts import magnet1_cutout
 
 
 def make(
-    length,
-    width,
-    height,
-    magnet_y,
-    groove_width,
-    groove_height,
-    groove_y,
+    length=7.3,
+    width=10,
+    height=1.8,
+    magnet_y=5.4,
+    groove_width=0.75,
+    groove_height=0.7,
+    groove_y=2,
 ):
     return (
         Workplane()
@@ -39,14 +39,4 @@ def make(
     )
 
 
-vscode_main(
-    make(
-        length=7.3,
-        width=10,
-        height=1.8,
-        magnet_y=5.4,
-        groove_width=0.75,
-        groove_height=0.7,
-        groove_y=2,
-    )
-)
+vscode_main(make)

@@ -1,8 +1,8 @@
 import argparse
+import datetime
 from genericpath import getmtime
-import inspect
 import time
-from typing import Any
+from typing import Callable
 import cadquery as cq
 import glob
 import importlib
@@ -11,7 +11,7 @@ from os.path import dirname, basename, join
 CLI = False
 
 
-def vscode_main(*args, **kwargs):
+def vscode_main(make: Callable, **kwargs):
     if CLI:
         return
 
@@ -19,7 +19,7 @@ def vscode_main(*args, **kwargs):
 
     set_port(3939)
     set_defaults(reset_camera=Camera.KEEP)
-    show(*args, **kwargs)
+    show(make(), **kwargs)
 
 
 def export():
@@ -53,7 +53,7 @@ def export():
         for attr, ext in TYPES:
             if hasattr(module, attr) and getattr(module, attr):
                 fname = f"{OUT}/{part}.{ext}"
-                print(part.ljust(50), ext.ljust(5), end=" ")
+                print(part.ljust(40), ext.ljust(5), end=" ")
                 if not args.force:
                     try:
                         target_time = getmtime(fname)
@@ -63,12 +63,12 @@ def export():
                         print("not changed")
                         continue
 
-                start = time.time_ns()
+                start = datetime.datetime.now()
 
                 if not obj:
                     obj = make()
                     if isinstance(obj, cq.Assembly):
                         obj = obj.toCompound()
                 cq.exporters.export(obj, fname)
-                print(int((time.time_ns() - start) / 1000000))
+                print(datetime.datetime.now() - start)
     return 0

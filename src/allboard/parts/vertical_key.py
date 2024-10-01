@@ -1,5 +1,4 @@
 # %%
-from threading import Lock, Thread
 from cadquery import Workplane
 from allboard import vscode_main
 from allboard.cq_utils import tbox
@@ -12,14 +11,14 @@ post_length = 7.3
 
 
 def make(
-    length,
-    width,
-    angle,
-    post_width,
-    post_groove_width,
-    post_groove_height,
-    post_groove_y,
-    post_magnet_y,
+    length=13,
+    width=5,
+    angle=0,
+    post_width=10,
+    post_groove_width=0.75,
+    post_groove_height=0.75,
+    post_groove_y=2,
+    post_magnet_y=5.4,
 ):
     base = (
         Workplane()
@@ -68,77 +67,4 @@ def make(
     )
 
 
-vscode_main(
-    make(
-        length=13,
-        width=5,
-        angle=0,
-        post_width=10,
-        post_groove_width=0.75,
-        post_groove_height=0.75,
-        post_groove_y=2,
-        post_magnet_y=5.4,
-    )
-)
-
-
-# _mutex = Lock()
-# _results = []
-# _names = []
-# _threads = []
-
-
-# def _job(*args):
-#     result = make(
-#         length,
-#         width,
-#         angle,
-#         post_width,
-#         post_groove_width=0.5,
-#         post_groove_height=0.5,
-#         post_groove_y=2,
-#         post_magnet_y=5,
-#     )
-#     _mutex.acquire(True)
-#     i = len(_results)
-#     _results.append(
-#         result.translate(
-#             (
-#                 (i % 10) * 40,
-#                 int(i / 10) * 70,
-#                 0,
-#             )
-#         )
-#     )
-#     _names.append(str(args))
-#     _mutex.release()
-
-
-# for length in [13, 30]:
-#     for width in [5, 11, 30]:
-#         for angle in [0, 10]:
-#             for post_width in [10, 20]:
-#                 for post_groove_width in [0.5]:
-#                     for post_groove_height in [0.5]:
-#                         for post_groove_y in [2]:
-#                             for post_magnet_y in [5, 10]:
-#                                 t = Thread(
-#                                     target=_job,
-#                                     args=[
-#                                         length,
-#                                         width,
-#                                         angle,
-#                                         post_width,
-#                                         post_groove_width,
-#                                         post_groove_height,
-#                                         post_groove_y,
-#                                         post_magnet_y,
-#                                     ],
-#                                 )
-#                                 t.start()
-#                                 _threads.append(t)
-
-# for t in _threads:
-#     t.join()
-
-# vscode_main(*_results, names=_names)
+vscode_main(make)

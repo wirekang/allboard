@@ -76,4 +76,4 @@ def make():
     return base.union(post(-1)).union(post()).union(post_base)
 
 
-vscode_main(make())
+vscode_main(make)
