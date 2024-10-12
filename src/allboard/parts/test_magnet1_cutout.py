@@ -10,12 +10,12 @@ STL = 1
 def make():
 
     result = Workplane()
-    base_size = magnet1.diameter + 6
+    base_size = magnet1.diameter + 10
     base_height = magnet1.height + 0.4
 
     def _make(x, y, angle, bottom_margin, top_margin, height_margin):
-        font_size = 4
-        font_margin = 0.2
+        font_size = 6
+        font_margin = 0.4
         base = (
             Workplane()
             .box(
@@ -114,9 +114,9 @@ def make():
                             height_margin,
                         ]
                     )
-                    x += base_size + 0.4
+                    x += base_size + 1
             x = 0
-            y += base_size + (1 if angle == 0 else 0.4)
+            y += base_size + (1 if angle == 0 else 1)
 
     run_multithread(args_list, _make)
 

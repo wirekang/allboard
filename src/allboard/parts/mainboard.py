@@ -5,7 +5,6 @@ from allboard import vscode_main
 from allboard.cq_utils import tbox
 from allboard.parts import mainboard_screw
 
-STL = 1
 DXF = 1
 
 length = 42

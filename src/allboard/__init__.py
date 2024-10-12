@@ -1,7 +1,6 @@
 import argparse
 import datetime
 from genericpath import getmtime
-import time
 from typing import Callable
 import cadquery as cq
 import glob
@@ -18,7 +17,9 @@ def vscode_main(make: Callable, **kwargs):
     from ocp_vscode import show, set_port, set_defaults, Camera
 
     set_port(3939)
-    set_defaults(reset_camera=Camera.KEEP)
+    set_defaults(
+        reset_camera=Camera.KEEP,
+    )
     show(make(), **kwargs)
 
 
