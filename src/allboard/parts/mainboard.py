@@ -3,7 +3,7 @@
 from cadquery import Workplane
 from allboard import vscode_main
 from allboard.cq_utils import tbox
-from allboard.parts import mainboard_screw
+from allboard.parts import bolt1
 
 DXF = 1
 
@@ -83,7 +83,7 @@ def make():
         ),
     ]
 
-    hole_rect_offset = screw_hole_margin + mainboard_screw.diameter / 2
+    hole_rect_offset = screw_hole_margin + bolt1.diameter / 2
 
     hole_rect_length = length - hole_rect_offset * 2
     hole_rect_width = width - hole_rect_offset * 2
@@ -101,7 +101,7 @@ def make():
             centered=False,
         )
         .vertices("<X and >Y or >X and <Y")
-        .hole(mainboard_screw.diameter)
+        .hole(bolt1.diameter)
     )
 
     result = base

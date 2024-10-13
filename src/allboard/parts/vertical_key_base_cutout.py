@@ -14,15 +14,16 @@ from allboard.constants import (
     vertical_magnet_cutout_height_margin,
 )
 
+lens_hole_margin = 0.3
 
 def make(
-    roof_height=1.8,
+    roof_height=2.1,
     post_width=10,
     post_groove_width=0.75,
     post_groove_height=0.75,
-    post_groove_y=3,
-    post_magnet_y=5.4,
-    lens_distance=10,
+    post_groove_y=2.5,
+    post_magnet_y=6,
+    lens_distance=9.2,
 ):
     key_well_cutout = vertical_key_well_cutout.make(
         post_width=post_width,
@@ -58,7 +59,7 @@ def make(
         )
         .constrain("well", "FixedRotation", (0, 0, 0))
         .constrain("led", "FixedRotation", (0, 0, 0))
-        .constrain("led@faces@>Z", "well@faces@>Z", "PointInPlane", -roof_height)
+        .constrain("led@faces@>Z", "well@faces@>Z", "PointInPlane", -roof_height + 0.1)
         .constrain("magnet@faces@<Y", "well@faces@>Y", "PointInPlane")
         .constrain(
             "magnet@faces@>Z",
@@ -67,9 +68,13 @@ def make(
             -post_magnet_y - magnet1.diameter / 2 - vertical_key_well_cutout.margin_z,
         )
         .constrain(
-            "led?center", "well@faces@>Y", "PointInPlane", -led.lens_diameter / 2 - 0.2
+            "led?center",
+            "well@faces@>Y",
+            "PointInPlane",
+            -led.lens_diameter / 2 - lens_hole_margin,
         )
-        .constrain("led?center", "well?center", "PointInPlane")
+        .constrain("well?center", "led?center", "PointInPlane")
+        .constrain("magnet@faces@<Y", "well?center", "PointInPlane")
         .solve()
         .toCompound()
         .fuse()

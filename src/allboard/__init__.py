@@ -1,6 +1,7 @@
 import argparse
 import datetime
 from genericpath import getmtime
+import inspect
 from typing import Callable
 import cadquery as cq
 import glob
@@ -11,6 +12,9 @@ CLI = False
 
 
 def vscode_main(make: Callable, **kwargs):
+    if inspect.currentframe().f_back.f_globals["__name__"] != "__main__":
+        return
+
     if CLI:
         return
 
@@ -20,6 +24,7 @@ def vscode_main(make: Callable, **kwargs):
     set_defaults(
         reset_camera=Camera.KEEP,
     )
+    print("show")
     show(make(), **kwargs)
 
 
@@ -35,6 +40,7 @@ def export():
 
     parser = argparse.ArgumentParser()
     parser.add_argument("-f", "--force", action="store_true")
+    parser.add_argument("-n", "--name", required=False)
     args = parser.parse_args()
 
     files = glob.glob(join(dirname(__file__), "parts", "*.py"))
@@ -53,6 +59,8 @@ def export():
 
         for attr, ext in TYPES:
             if hasattr(module, attr) and getattr(module, attr):
+                if args.name and args.name not in part:
+                    continue
                 fname = f"{OUT}/{part}.{ext}"
                 print(part.ljust(40), ext.ljust(5), end=" ")
                 if not args.force:

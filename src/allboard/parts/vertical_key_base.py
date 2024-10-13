@@ -13,13 +13,13 @@ def make(
     height=6.5,
     roof_length=8.6,
     roof_width=4.8,
-    roof_height=1.8,
+    roof_height=2.1,
     post_width=10,
     post_groove_width=0.75,
     post_groove_height=0.75,
-    post_groove_y=2,
-    post_magnet_y=5.4,
-    lens_distance=10,
+    post_groove_y=2.5,
+    post_magnet_y=6,
+    lens_distance=9.2,
 ):
     cutout = vertical_key_base_cutout.make(
         roof_height=roof_height,
@@ -31,19 +31,19 @@ def make(
         lens_distance=lens_distance,
     )
     bb = cutout.BoundingBox()
-    base_length = bb.xlen - 0.3
-    base_width = bb.ylen - 0.1
+    base_length = bb.xlen
+    base_width = bb.ylen + 0.05
     base_height = height
     base = (
         Workplane()
         .box(base_length, base_width, base_height)
-        .translate((0, base_width / 2, -base_height / 2))
+        .translate(((bb.xmax + bb.xmin) / 2, base_width / 2, -base_height / 2))
         .union(
             Workplane()
             .box(
                 roof_length,
                 roof_width,
-                roof_height + 0.1,
+                roof_height + 0.2,
             )
             .edges("|Z and >Y")
             .fillet(roof_fillet)

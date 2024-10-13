@@ -18,7 +18,7 @@ rim_height = 0.5
 
 post_length = 3.5
 post_width = 3.5
-post_height = 8
+post_height = 10
 post_distance = 8.3
 post_base_height = 2.7
 post_fillet = 0.4

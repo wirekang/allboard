@@ -5,7 +5,7 @@ from allboard.parts import led
 
 margin_length = 0.3
 margin_width = 0.3
-margin_height = 0.1
+margin_height = 0.2
 lens_margin_length = 0
 lens_margin_width = 0
 
