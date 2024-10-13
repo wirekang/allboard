@@ -1,6 +1,7 @@
 # %%
 from allboard import vscode_main
-from allboard.parts import vertical_key
+from allboard.parts import cluster, vertical_key
+
 
 STL = 1
 
@@ -10,11 +11,11 @@ def make():
         length=13,
         width=5,
         angle=0,
-        post_width=10,
-        post_groove_width=0.75,
-        post_groove_height=0.75,
-        post_groove_y=2,
-        post_magnet_y=5.4,
+        post_width=cluster.post_width,
+        post_groove_width=cluster.post_groove_width,
+        post_groove_height=cluster.post_groove_height,
+        post_groove_y=cluster.post_groove_y,
+        post_magnet_y=cluster.post_magnet_y,
     )
 
 

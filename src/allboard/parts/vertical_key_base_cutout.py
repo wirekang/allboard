@@ -5,11 +5,14 @@ from allboard.parts import (
     led,
     led_cutout,
     magnet1,
+    magnet1_cutout,
     vertical_key_well_cutout,
 )
-
-
-lens2lens = 9.2
+from allboard.constants import (
+    vertical_magnet_cutout_bottom_margin,
+    vertical_magnet_cutout_top_margin,
+    vertical_magnet_cutout_height_margin,
+)
 
 
 def make(
@@ -19,9 +22,7 @@ def make(
     post_groove_height=0.75,
     post_groove_y=3,
     post_magnet_y=5.4,
-    well_magnet_bottom_margin=-0.15,
-    well_magnet_top_margin=-0.15,
-    well_magnet_height_margin=0,
+    lens_distance=10,
 ):
     key_well_cutout = vertical_key_well_cutout.make(
         post_width=post_width,
@@ -29,71 +30,50 @@ def make(
         post_groove_height=post_groove_height,
         post_groove_y=post_groove_y,
         post_magnet_y=post_magnet_y,
-        well_magnet_bottom_margin=well_magnet_bottom_margin,
-        well_magnet_top_margin=well_magnet_top_margin,
-        well_magnet_height_margin=well_magnet_height_margin,
-    ).rotateAboutCenter((1, 0, 0), 180)
-
-    lens_hole = (
-        Workplane()
-        .cylinder(lens2lens, led.lens_diameter / 2)
-        .rotateAboutCenter((0, 1, 0), 90)
     )
+    key_well_cutout = (
+        Workplane("YZ")
+        .add(key_well_cutout)
+        .section(0)
+        .faces()
+        .first()
+        .tag("center")
+        .end(3)
+    )
+
+    led_ = led_cutout.make(lens_distance)
+    led_ = Workplane("YZ").add(led_).section(0).faces().first().tag("center").end(3)
 
     result = (
         Assembly()
-        .add(key_well_cutout, name="base")
-        .add(led_cutout.make().rotateAboutCenter((0, 0, 1), 90), name="left")
-        .add(led_cutout.make().rotateAboutCenter((0, 0, 1), -90), name="right")
-        .add(lens_hole, name="hole")
+        .add(key_well_cutout, name="well")
+        .add(led_, name="led")
         .add(
-            Workplane().box(0.0001, 0.0001, 0.0001).faces("|Z").tag("center").end(1),
-            name="center",
+            magnet1_cutout.make(
+                vertical_magnet_cutout_bottom_margin,
+                vertical_magnet_cutout_top_margin,
+                vertical_magnet_cutout_height_margin,
+            ).rotateAboutCenter((1, 0, 0), 90),
+            name="magnet",
         )
-        .constrain("base", "FixedRotation", (0, 0, 0))
-        .constrain("left", "FixedRotation", (0, 0, 0))
-        .constrain("right", "FixedRotation", (0, 0, 0))
-        .constrain("hole", "FixedRotation", (0, 0, 0))
-        .constrain("center", "Fixed")
-        .constrain("left@faces@>X", "center?center", "PointInPlane", lens2lens / 2)
-        .constrain("right@faces@<X", "center?center", "PointInPlane", lens2lens / 2)
+        .constrain("well", "FixedRotation", (0, 0, 0))
+        .constrain("led", "FixedRotation", (0, 0, 0))
+        .constrain("led@faces@>Z", "well@faces@>Z", "PointInPlane", -roof_height)
+        .constrain("magnet@faces@<Y", "well@faces@>Y", "PointInPlane")
         .constrain(
-            "left@faces@>X", "base@faces@>Y", "PointInPlane", -led.lens_diameter - 0.3
-        )
-        .constrain(
-            "right@faces@<X", "base@faces@>Y", "PointInPlane", -led.lens_diameter - 0.3
-        )
-        .constrain(
-            "left@faces@>Z", "base@faces@>Z", "PointInPlane", -roof_height + 0.05
-        )
-        .constrain(
-            "right@faces@>Z", "base@faces@>Z", "PointInPlane", -roof_height + 0.05
-        )
-        .constrain("hole@faces@<X", "left@faces@>X", "PointInPlane")
-        .constrain("hole@faces@>X", "right@faces@<X", "PointInPlane")
-        .constrain(
-            "hole@faces@>Z",
-            "left@faces@>Z",
+            "magnet@faces@>Z",
+            "well@faces@>Z",
             "PointInPlane",
-            -led.lens_z,
+            -post_magnet_y - magnet1.diameter / 2 - vertical_key_well_cutout.margin_z,
         )
         .constrain(
-            "hole@faces@>Z",
-            "right@faces@>Z",
-            "PointInPlane",
-            -led.lens_z,
+            "led?center", "well@faces@>Y", "PointInPlane", -led.lens_diameter / 2 - 0.2
         )
-        .constrain(
-            "hole@faces@>Y",
-            "base@faces@>Y",
-            "PointInPlane",
-            -magnet1.height - well_magnet_height_margin - 0.3,
-        )
+        .constrain("led?center", "well?center", "PointInPlane")
         .solve()
+        .toCompound()
+        .fuse()
     )
-    result.children = [c for c in result.children if c.name != "center"]
-    del result.objects["center"]
-    result = result.toCompound().fuse()
 
     return result.translate(
         (

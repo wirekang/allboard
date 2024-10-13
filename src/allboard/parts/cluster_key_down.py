@@ -1,8 +1,12 @@
 # %%
-
 from cadquery import Workplane
 from allboard import vscode_main
 from allboard.parts import magnet1_cutout
+from allboard.constants import (
+    horizontal_magnet_cutout_bottom_margin,
+    horizontal_magnet_cutout_top_margin,
+    horizontal_magnet_cutout_height_margin,
+)
 
 STL = 1
 
@@ -15,13 +19,9 @@ rim_height = 0.5
 post_length = 3.5
 post_width = 3.5
 post_height = 8
-post_margin = 0.6
-post_base_height = 2.5
-fillet = 0.4
-
-magnet_margin_height = 0.2
-magnet_margin_bottom = 0.1
-magnet_margin_top = 0.3
+post_distance = 8.3
+post_base_height = 2.7
+post_fillet = 0.4
 
 
 def make():
@@ -39,24 +39,18 @@ def make():
         return (
             Workplane()
             .box(post_length, post_width, post_height)
-            .edges("not <Z")
-            .fillet(fillet)
+            .edges(">Z")
+            .fillet(post_fillet)
             .cut(
                 magnet1_cutout.make(
-                    magnet_margin_bottom,
-                    magnet_margin_top,
-                    magnet_margin_height,
+                    horizontal_magnet_cutout_bottom_margin,
+                    horizontal_magnet_cutout_top_margin,
+                    horizontal_magnet_cutout_height_margin,
                 ).translate((0, 0, post_height / 2))
             )
             .translate(
                 (
-                    (
-                        (diameter / 2)
-                        - rim_thickness
-                        - post_margin
-                        - post_width / 2
-                    )
-                    * xm,
+                    post_distance / 2 * xm,
                     0,
                     post_height / 2 + height - rim_height,
                 )
@@ -66,7 +60,7 @@ def make():
     post_base = (
         Workplane()
         .box(
-            diameter - post_margin * 2 - rim_thickness * 2 - fillet * 3,
+            diameter - rim_thickness * 2 - post_fillet * 3,
             post_width,
             post_base_height,
         )

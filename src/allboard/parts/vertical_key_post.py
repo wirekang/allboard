@@ -3,6 +3,11 @@ from cadquery import Workplane
 from allboard import vscode_main
 from allboard.cq_utils import tbox
 from allboard.parts import magnet1_cutout
+from allboard.constants import (
+    horizontal_magnet_cutout_bottom_margin,
+    horizontal_magnet_cutout_top_margin,
+    horizontal_magnet_cutout_height_margin,
+)
 
 
 def make(
@@ -20,9 +25,11 @@ def make(
         .edges("<Y")
         .fillet(height / 2 - 0.00001)
         .cut(
-            magnet1_cutout.make().translate(
-                (0, -width / 2 + magnet_y, height / 2)
-            )
+            magnet1_cutout.make(
+                bottom_margin=horizontal_magnet_cutout_bottom_margin,
+                top_margin=horizontal_magnet_cutout_top_margin,
+                height_margin=horizontal_magnet_cutout_height_margin,
+            ).translate((0, -width / 2 + magnet_y, height / 2))
         )
         .cut(
             tbox(
