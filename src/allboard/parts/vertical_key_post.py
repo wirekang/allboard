@@ -13,11 +13,11 @@ from allboard.constants import (
 def make(
     length=7.3,
     width=10,
-    height=1.8,
-    magnet_y=5.4,
+    height=1.7,
+    magnet_y=6,
     groove_width=0.75,
     groove_height=0.7,
-    groove_y=2,
+    groove_y=2.5,
 ):
     return (
         Workplane()

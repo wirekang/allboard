@@ -21,7 +21,7 @@ def make(
     post_width=10,
     post_groove_width=0.75,
     post_groove_height=0.75,
-    post_groove_y=2.5,
+    post_groove_y=2.6,
     post_magnet_y=6,
     lens_distance=9.2,
 ):

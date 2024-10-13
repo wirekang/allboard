@@ -13,19 +13,20 @@ STL = 1
 
 
 length = 25
-width = 48.5
+width = 48
 height = 6.5
-head_fillet = 12
+head_fillet = 5
 tail_fillet = 12
 
 roof_length = 8.6
 roof_width = 4.8
 roof_height = 2.1
+roof_fillet = 0.8
 
 post_width = 10
 post_groove_width = 0.75
 post_groove_height = 0.75
-post_groove_y = 2.5
+post_groove_y = 2.6
 post_magnet_y = 6
 
 
@@ -35,8 +36,8 @@ connector_cutout_height = 2.5
 connector_cutout_y = 16
 
 pcb_screw_cutout_y = 21
-pcb_nut_cutout_length = 6.5
-pcb_nut_cutout_width = 6.5
+pcb_nut_cutout_length = 6.2
+pcb_nut_cutout_width = 6.2
 pcb_nut_cutout_height = 2.7
 
 lens_distance = 9.2
@@ -44,7 +45,7 @@ lens_distance = 9.2
 south_margin = 0.5
 north_margin = 0.5
 
-adapter_screw_cutout_y = -20
+adapter_screw_cutout_y = -18
 adapter_screw_cutout_z = -2
 
 
@@ -70,6 +71,8 @@ def make():
         vertical_base_roofs.append(
             Workplane()
             .box(roof_length, roof_width, roof_height + 0.2)
+            .edges("|Z")
+            .fillet(roof_fillet)
             .translate(
                 (
                     0,

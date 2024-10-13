@@ -1,4 +1,6 @@
 # %%
+
+from cadquery import Workplane
 from allboard import vscode_main
 from allboard.cq_utils import union_padding
 from allboard.parts import magnet1_cutout, vertical_key, vertical_key_post
@@ -18,8 +20,8 @@ def make(
     post_width=10,
     post_groove_width=0.75,
     post_groove_height=0.75,
-    post_groove_y=2,
-    post_magnet_y=5.4,
+    post_groove_y=2.6,
+    post_magnet_y=6,
 ):
     post = (
         vertical_key_post.make(
@@ -43,10 +45,10 @@ def make(
     post = union_padding(post, x=margin_x, y=margin_y, z=margin_z)
     post_bb = post.combine().val().BoundingBox()
     post_0 = post.translate((0, 0, -post_bb.zmax))
-    post = post_0
-    for hat_width in range(angle + 1):
-        post = post.union(post_0.rotate((1, 0, 0), (0, 0, 0), hat_width))
-    return post
+    result = Workplane()
+    for angle_ in range(angle + 1):
+        result = result.union(post_0.rotate((1, 0, 0), (0, 0, 0), angle_))
+    return result
 
 
 vscode_main(make)
