@@ -6,7 +6,6 @@ from allboard.parts import (
     cluster_key_down_base_cutout,
     vertical_key_base_cutout,
 )
-from allboard.utils import run_multithread
 from allboard.constants import sacrificial_layer_height
 
 STL = 1
@@ -14,20 +13,20 @@ STL = 1
 
 length = 25
 width = 48
-height = 6.5
+height = 6.8
 head_fillet = 5
 tail_fillet = 12
 
 roof_length = 8.6
 roof_width = 4.8
-roof_height = 2.1
+roof_height = 2
 roof_fillet = 0.8
 
 post_width = 10
 post_groove_width = 0.75
 post_groove_height = 0.75
-post_groove_y = 2.6
-post_magnet_y = 6
+post_groove_y = 3.1
+post_magnet_y = 6.4
 
 
 connector_cutout_length = 12
@@ -51,11 +50,11 @@ adapter_screw_cutout_z = -2
 
 # todo: refactor
 def make():
-    vertical_base_roofs = []
-    vertical_base_cutouts = []
+    vertical_base_cutout = Workplane()
+    vertical_base_roof = Workplane()
 
     def f_vertical_base_cutout(angle, margin=0):
-        vertical_base_cutouts.append(
+        vertical_base_cutout.add(
             vertical_key_base_cutout.make(
                 roof_height,
                 post_width,
@@ -68,7 +67,7 @@ def make():
             .translate((0, -length / 2 - margin, 0))
             .rotate((0, 0, 0), (0, 0, 1), angle)
         )
-        vertical_base_roofs.append(
+        vertical_base_roof.add(
             Workplane()
             .box(roof_length, roof_width, roof_height + 0.2)
             .edges("|Z")
@@ -81,15 +80,13 @@ def make():
                 )
             )
             .rotate((0, 0, 0), (0, 0, 1), angle)
-            .val()
         )
 
-    run_multithread(
-        [[0, south_margin], [90], [180, north_margin], [270]], f_vertical_base_cutout
-    )
+    f_vertical_base_cutout(0, south_margin)
+    f_vertical_base_cutout(90)
+    f_vertical_base_cutout(180, north_margin)
+    f_vertical_base_cutout(270)
 
-    vertical_base_cutout = Workplane().add(vertical_base_cutouts)
-    vertical_base_roof = Workplane().add(vertical_base_roofs)
 
     down_base_cutout = cluster_key_down_base_cutout.make(height, lens_distance)
 

@@ -11,16 +11,16 @@ from allboard.constants import (
 )
 
 angle = 13
-margin_x = 0.5
-margin_y = 0.3
-margin_z = 0.1
+margin_x = 0.3
+margin_y = 0.2
+margin_z = 0
 
 
 def make(
     post_width=10,
     post_groove_width=0.75,
     post_groove_height=0.75,
-    post_groove_y=2.6,
+    post_groove_y=3,
     post_magnet_y=6,
 ):
     post = (

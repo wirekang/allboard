@@ -18,7 +18,7 @@ def make(
     post_groove_width=0.75,
     post_groove_height=0.75,
     post_groove_y=2,
-    post_magnet_y=5.4,
+    post_magnet_y=7,
 ):
     base = (
         Workplane()
