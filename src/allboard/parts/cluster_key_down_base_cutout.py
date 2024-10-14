@@ -11,10 +11,9 @@ from allboard.constants import (
 post_margin = 1
 travel = 1.2
 
-
 def make(
     height=6.5,
-    lens_distance=10,
+    led_distance=9.9,
 ):
     post_left = (
         Workplane()
@@ -58,7 +57,7 @@ def make(
         horizontal_magnet_cutout_height_margin,
     )
 
-    led = led_cutout.make(lens_distance).rotateAboutCenter((0, 0, 1), 90)
+    led = led_cutout.make(led_distance).rotateAboutCenter((0, 0, 1), 90)
 
     return post_left.union(post_right).union(post_base).union(magnet).union(led)
 

@@ -9,7 +9,7 @@ STL = 1
 def make():
     return vertical_key.make(
         length=13,
-        width=5,
+        width=8,
         angle=0,
         post_width=cluster.post_width,
         post_groove_width=cluster.post_groove_width,

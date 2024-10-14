@@ -3,19 +3,21 @@ from cadquery import Workplane
 from allboard import vscode_main
 from allboard.parts import (
     bolt1,
+    bolt1_cutout,
     cluster_key_down_base_cutout,
     vertical_key_base_cutout,
 )
 from allboard.constants import sacrificial_layer_height
 
 STL = 1
+DXF = 1
 
 
 length = 25
 width = 48
-height = 6.8
+height = 6.5
 head_fillet = 5
-tail_fillet = 12
+tail_fillet = 12.2
 
 roof_length = 8.6
 roof_width = 4.8
@@ -26,34 +28,41 @@ post_width = 10
 post_groove_width = 0.75
 post_groove_height = 0.75
 post_groove_y = 3.1
-post_magnet_y = 6.4
+post_magnet_y = 6.2
 
 
 connector_cutout_length = 12
-connector_cutout_width = 2.7
+connector_cutout_width = 2.4
 connector_cutout_height = 2.5
-connector_cutout_y = 16
+connector_cutout_y = 15.5
 
-pcb_screw_cutout_y = 21
-pcb_nut_cutout_length = 6.2
-pcb_nut_cutout_width = 6.2
-pcb_nut_cutout_height = 2.7
+pcb_screw_cutout_y = 20.7
 
-lens_distance = 9.2
+led_distance = 12
+led_distance_north = 14
+led_distance_down = 9.9
 
-south_margin = 0.5
-north_margin = 0.5
 
-adapter_screw_cutout_y = -18
+south_margin = 0
+north_margin = 0
+
+adapter_screw_cutout_y = -16.5
 adapter_screw_cutout_z = -2
 
+key_angle = 15
 
-# todo: refactor
+led_margin_y = 0.6
+led_margin_y_south = 0.8
+led_margin_y_north = 1
+
+tail_cut = 4
+
+
 def make():
     vertical_base_cutout = Workplane()
     vertical_base_roof = Workplane()
 
-    def f_vertical_base_cutout(angle, margin=0):
+    def f_vertical_base_cutout(angle, d, lm):
         vertical_base_cutout.add(
             vertical_key_base_cutout.make(
                 roof_height,
@@ -62,9 +71,11 @@ def make():
                 post_groove_height,
                 post_groove_y,
                 post_magnet_y,
-                lens_distance,
+                led_distance=d,
+                angle=key_angle,
+                led_margin_y=lm,
             )
-            .translate((0, -length / 2 - margin, 0))
+            .translate((0, -length / 2, 0))
             .rotate((0, 0, 0), (0, 0, 1), angle)
         )
         vertical_base_roof.add(
@@ -82,13 +93,12 @@ def make():
             .rotate((0, 0, 0), (0, 0, 1), angle)
         )
 
-    f_vertical_base_cutout(0, south_margin)
-    f_vertical_base_cutout(90)
-    f_vertical_base_cutout(180, north_margin)
-    f_vertical_base_cutout(270)
+    f_vertical_base_cutout(0, led_distance, led_margin_y_south)
+    f_vertical_base_cutout(90, led_distance, led_margin_y)
+    f_vertical_base_cutout(180, led_distance_north, led_margin_y_north)
+    f_vertical_base_cutout(270, led_distance, led_margin_y)
 
-
-    down_base_cutout = cluster_key_down_base_cutout.make(height, lens_distance)
+    down_base_cutout = cluster_key_down_base_cutout.make(height, led_distance_down)
 
     connector_cutout = (
         Workplane()
@@ -100,32 +110,8 @@ def make():
         .translate((0, connector_cutout_y, -connector_cutout_height / 2))
     )
 
-    # todo: parameterize
-    pcb_screw_cutout = (
-        Workplane()
-        .cylinder(1.8, bolt1.diameter / 2)
-        .translate((0, 0, -bolt1.diameter / 2 / 2))
-        .union(
-            Workplane()
-            .cylinder(4.5, bolt1.diameter / 2)
-            .translate((0, 0, -1.8 - 4.5 / 2 - sacrificial_layer_height / 2))
-        )
-        .union(
-            Workplane()
-            .box(
-                pcb_nut_cutout_length,
-                pcb_nut_cutout_width,
-                pcb_nut_cutout_height,
-            )
-            .translate(
-                (
-                    0,
-                    0,
-                    -1.8 - pcb_nut_cutout_height / 2 - sacrificial_layer_height / 2,
-                )
-            )
-        )
-        .translate((0, pcb_screw_cutout_y, 0))
+    pcb_screw_cutout = bolt1_cutout.make(margin_nut_width=1).translate(
+        (0, pcb_screw_cutout_y, 0)
     )
 
     adapter_screw_cutout = (
@@ -134,7 +120,11 @@ def make():
         .translate((0, adapter_screw_cutout_y, adapter_screw_cutout_z / 2))
         .union(
             Workplane()
-            .cylinder(height + adapter_screw_cutout_z, bolt1.diameter)
+            .box(
+                bolt1.diameter * 1.5,
+                bolt1.diameter * 1.5,
+                height + adapter_screw_cutout_z,
+            )
             .translate(
                 (
                     0,
@@ -151,6 +141,11 @@ def make():
         Workplane()
         .box(length, width, height)
         .translate((0, 0, -height / 2))
+        .cut(
+            Workplane()
+            .box(length, width, height)
+            .translate((0, -width + tail_cut, -height / 2)),
+        )
         .edges("|Z and >Y")
         .fillet(head_fillet)
         .edges("|Z and <Y")

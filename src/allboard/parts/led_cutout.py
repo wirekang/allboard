@@ -9,7 +9,11 @@ margin_height = 0.2
 lens_margin_length = 0
 lens_margin_width = 0
 
-def make(lens_distance=10):
+def make(distance=12):
+    """
+    Args:
+        distance: pin to pin distance in PCB.
+    """
     base_length = led.base_length + margin_length
     base_width = led.base_width + margin_width
     base_height = led.base_height + margin_height
@@ -17,6 +21,7 @@ def make(lens_distance=10):
     lens_cut_length = led.lens_diameter / 2 + lens_margin_length
     lens_cut_width = led.lens_diameter + lens_margin_width
     lens_cut_height = led.lens_z + led.lens_diameter / 2
+    lens_distance = distance - base_width / 2 - lens_cut_width / 2
 
     base = Workplane().box(base_length, base_width, base_height)
     lens_cut = Workplane().box(lens_cut_length, lens_cut_width, lens_cut_height)

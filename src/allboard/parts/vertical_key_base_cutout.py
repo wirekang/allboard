@@ -23,7 +23,9 @@ def make(
     post_groove_height=0.75,
     post_groove_y=2.6,
     post_magnet_y=6,
-    lens_distance=9.2,
+    led_distance=10,
+    angle=16,
+    led_margin_y=0.8,
 ):
     key_well_cutout = vertical_key_well_cutout.make(
         post_width=post_width,
@@ -31,6 +33,7 @@ def make(
         post_groove_height=post_groove_height,
         post_groove_y=post_groove_y,
         post_magnet_y=post_magnet_y,
+        angle=angle,
     )
     key_well_cutout = (
         Workplane("YZ")
@@ -42,7 +45,7 @@ def make(
         .end(3)
     )
 
-    led_ = led_cutout.make(lens_distance)
+    led_ = led_cutout.make(led_distance)
     led_ = Workplane("YZ").add(led_).section(0).faces().first().tag("center").end(3)
 
     result = (
@@ -65,7 +68,7 @@ def make(
             "magnet@faces@>Z",
             "well@faces@>Z",
             "PointInPlane",
-            -post_magnet_y - magnet1.diameter / 2 - vertical_key_well_cutout.margin_z,
+            -post_magnet_y - magnet1.diameter / 2,
         )
         .constrain(
             "led?center",
@@ -80,11 +83,16 @@ def make(
         .fuse()
     )
 
+    b = result.BoundingBox()
     return result.translate(
         (
-            0,
-            -result.BoundingBox().ymin,
-            -result.BoundingBox().zmax + roof_height,
+            -b.xmin - b.xmax,
+            -b.ymax
+            + lens_hole_margin / 2
+            + led_cutout.margin_width
+            + led.base_width
+            + led_margin_y,
+            -b.zmax + roof_height,
         )
     )
 
