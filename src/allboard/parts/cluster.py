@@ -28,7 +28,7 @@ post_width = 10
 post_groove_width = 0.75
 post_groove_height = 0.75
 post_groove_y = 3.1
-post_magnet_y = 6.2
+post_magnet_y = 5.5
 
 
 connector_cutout_length = 12

@@ -23,7 +23,7 @@ def make(
     post_groove_height=0.75,
     post_groove_y=2.6,
     post_magnet_y=6,
-    led_distance=10,
+    led_distance=12,
     angle=16,
     led_margin_y=0.8,
 ):
@@ -35,6 +35,7 @@ def make(
         post_magnet_y=post_magnet_y,
         angle=angle,
     )
+
     key_well_cutout = (
         Workplane("YZ")
         .add(key_well_cutout)
@@ -62,7 +63,12 @@ def make(
         )
         .constrain("well", "FixedRotation", (0, 0, 0))
         .constrain("led", "FixedRotation", (0, 0, 0))
-        .constrain("led@faces@>Z", "well@faces@>Z", "PointInPlane", -roof_height + 0.1)
+        .constrain(
+            "led@faces@>Z",
+            "well@faces@>Z",
+            "PointInPlane",
+            -roof_height + 0.05 + vertical_key_well_cutout.margin_width / 2,
+        )
         .constrain("magnet@faces@<Y", "well@faces@>Y", "PointInPlane")
         .constrain(
             "magnet@faces@>Z",
@@ -92,7 +98,7 @@ def make(
             + led_cutout.margin_width
             + led.base_width
             + led_margin_y,
-            -b.zmax + roof_height,
+            -b.zmax + roof_height - vertical_key_well_cutout.margin_width / 2,
         )
     )
 

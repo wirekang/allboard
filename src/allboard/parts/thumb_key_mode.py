@@ -1,5 +1,5 @@
 # %%
-from cadquery import Assembly, Workplane
+from cadquery import Workplane
 from allboard import vscode_main
 from allboard.parts import thumb_cluster_right, vertical_key, vertical_key_post
 
@@ -7,11 +7,9 @@ from allboard.parts import thumb_cluster_right, vertical_key, vertical_key_post
 STL = 1
 
 
-width0 = 5
-width1 = 7
-width2 = 10
-angle1 = 40
-angle2 = 120
+width0 = 16
+width1 = 20
+angle1 = 67
 
 
 def make():
@@ -27,40 +25,22 @@ def make():
         magnet_y=thumb_cluster_right.post_magnet_y,
     )
 
-    p1 = Workplane().box(
-        length,
-        width1,
-        height,
-    )
-
-    p2 = Workplane().box(
-        length,
-        width2,
-        height,
-    )
-
-    asm = (
-        Assembly()
-        .add(post, name="post")
-        .add(p1, name="p1")
-        .add(p2, name="p2")
-        .constrain("post", "Fixed")
-        .constrain(
-            "p1",
-            "FixedRotation",
-            (angle1, 0, 0),
+    p1 = (
+        Workplane()
+        .box(
+            length,
+            width1,
+            height,
         )
-        .constrain(
-            "p2",
-            "FixedRotation",
-            (angle2, 0, 0),
-        )
-        .constrain("post@faces@>Y", "p1@faces@<Y", "Plane")
-        .constrain("p2@faces@<Y", "p1@faces@>Y", "Plane")
-        .solve()
+        .translate((0, width1 / 2, 0))
+        .rotate((0, 0, 0), (1, 0, 0), angle1)
+        .translate((0, (thumb_cluster_right.post_width + width0) / 2, 0))
+        .faces("<Y or >Y")
+        .fillet(0.5)
+        .translate((0, -0.7, 0))
     )
+    return post.union(p1, tol=0.3)
 
-    return Workplane().add(asm.toCompound().fuse(tol=0.3)).edges(">Y or >Z").fillet(0.5)
 
 
 vscode_main(make)

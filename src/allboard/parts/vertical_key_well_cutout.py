@@ -10,7 +10,7 @@ from allboard.constants import (
 )
 
 margin_length = 1
-margin_width = 2.5
+margin_width = 1
 margin_groove_width = -0.2
 margin_groove_height = -0.3
 

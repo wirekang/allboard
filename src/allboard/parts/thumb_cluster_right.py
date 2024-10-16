@@ -1,7 +1,12 @@
 # %%
 from cadquery import Workplane
 from allboard import vscode_main
-from allboard.parts import bolt1_cutout, vertical_key_base_cutout
+from allboard.parts import (
+    bolt1_cutout,
+    thumb_key_down,
+    thumb_key_down_base_cutout,
+    vertical_key_base_cutout,
+)
 
 STL = 1
 DXF = 1
@@ -12,14 +17,15 @@ roof_width = 4.8
 roof_height = 5.8
 roof_fillet = 0.8
 
-post_width = 16
+post_width = 12
+post_width_inner = 12
 post_groove_width = 0.75
 post_groove_height = 0.75
 post_groove_y = 3.1
-post_magnet_y = 9.4
+post_magnet_y = 9
 
-inner_x = -16.5
-inner_y = 6.25
+inner_x = -16.6
+inner_y = 6.5
 inner_angle = 20
 
 mod_x = inner_x - 5.7
@@ -27,10 +33,13 @@ mod_y = inner_y
 mod_angle = inner_angle
 
 upper_x = 20
-upper_y = 10
+upper_y = 10.1
+
+down_x = 2.6
+down_y = -16.2
 
 lower_x = upper_x
-lower_y = -16
+lower_y = -15.8
 
 key_angle = 10
 key_lower_angle = 7
@@ -43,29 +52,29 @@ led_distance = 12
 led_distance_down = 20.5
 
 led_margin_y_inner = 0.6
-led_margin_y_outer = 0.3
+led_margin_y_outer = 0.5
 
-pcb_screw_cutout1_x = 9.5
-pcb_screw_cutout1_y = 18.5
+pcb_screw_cutout1_x = 9.7
+pcb_screw_cutout1_y = 18.3
 pcb_screw_cutout1_angle = -10
 
-pcb_screw_cutout2_x = -13
-pcb_screw_cutout2_y = -7
+pcb_screw_cutout2_x = -12.8
+pcb_screw_cutout2_y = -6.7
 pcb_screw_cutout2_angle = -66
 
-fillet = 1.5
+fillet = 1
 
 
 def make():
     base = (
         (
             Workplane()
-            .moveTo(13.5, -51.5)
-            .lineTo(43.5, -51.5)
-            .lineTo(43.5, -7.5)
-            .lineTo(25, -4.5)
-            .lineTo(6.5, -5)
-            .lineTo(2, -20)
+            .moveTo(14, -51.1)
+            .lineTo(43, -51.1)
+            .lineTo(43, -7.7)
+            .lineTo(25, -3.9)
+            .lineTo(6.8, -5.7)
+            .lineTo(1.6, -20.6)
             .close()
         )
         .extrude(height)
@@ -170,15 +179,35 @@ def make():
     )
 
     pcb_screw_cutout1 = (
-        bolt1_cutout.make()
+        bolt1_cutout.make(0.1, 0.4)
         .translate((pcb_screw_cutout1_x, pcb_screw_cutout1_y, 0))
         .rotateAboutCenter((0, 0, 1), pcb_screw_cutout1_angle)
     )
 
     pcb_screw_cutout2 = (
-        bolt1_cutout.make()
+        bolt1_cutout.make(0.1, 0.3)
         .translate((pcb_screw_cutout2_x, pcb_screw_cutout2_y, 0))
         .rotateAboutCenter((0, 0, 1), pcb_screw_cutout2_angle)
+    )
+
+    down_cutout = thumb_key_down_base_cutout.make(
+        height,
+        led_distance_down,
+    ).translate((down_x, down_y, 0))
+    roof.add(
+        Workplane()
+        .box(
+            thumb_key_down.post_length,
+            thumb_key_down.post_stop_distance,
+            thumb_key_down.post_height - height,
+        )
+        .translate(
+            (
+                down_x,
+                down_y + thumb_key_down.post_stop_distance / 2,
+                (thumb_key_down.post_height - height) / 2,
+            )
+        )
     )
 
     return (
@@ -189,6 +218,7 @@ def make():
         .cut(lower_cutout)
         .cut(pcb_screw_cutout1)
         .cut(pcb_screw_cutout2)
+        .cut(down_cutout)
     )
 
 
