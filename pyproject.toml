@@ -11,9 +11,8 @@ dependencies = [
     "ipykernel>=6.29.5",
     "jupyter-console>=6.6.3",
     "ocp-tessellate>=3.0.4",
-    "ocp-vscode>=2.4.1",
+    "ocp-vscode>=2.5.3",
     "numpy<2",
-    "black>=24.8.0",
 ]
 readme = "README.md"
 requires-python = ">= 3.11"
@@ -29,8 +28,3 @@ dev-dependencies = []
 [tool.hatch.metadata]
 allow-direct-references = true
 
-[tool.hatch.build.targets.wheel]
-packages = ["src/allboard"]
-
-[project.scripts]
-export = "allboard:export"

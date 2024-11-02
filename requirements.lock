@@ -12,8 +12,6 @@
 -e file:.
 asttokens==2.4.1
     # via stack-data
-black==24.8.0
-    # via allboard
 cachetools==5.2.1
     # via ocp-tessellate
 cadquery==2.4.0
@@ -26,10 +24,7 @@ certifi==2024.8.30
     # via requests
 charset-normalizer==3.3.2
     # via requests
-click==8.1.7
-    # via black
 colorama==0.4.6
-    # via click
     # via ipython
 comm==0.2.2
     # via ipykernel
@@ -70,8 +65,6 @@ matplotlib-inline==0.1.7
     # via ipython
 multimethod==1.9.1
     # via cadquery
-mypy-extensions==1.0.0
-    # via black
 nest-asyncio==1.6.0
     # via ipykernel
 nlopt==2.7.1
@@ -91,23 +84,19 @@ numpy-quaternion==2023.0.3
 ocp-tessellate==3.0.4
     # via allboard
     # via ocp-vscode
-ocp-vscode==2.4.1
+ocp-vscode==2.5.3
     # via allboard
 orjson==3.10.7
     # via ocp-vscode
 packaging==24.1
-    # via black
     # via ipykernel
 parso==0.8.4
     # via jedi
 path==17.0.0
     # via cadquery
-pathspec==0.12.1
-    # via black
 pip==24.2
     # via allboard
 platformdirs==4.3.6
-    # via black
     # via jupyter-core
 prompt-toolkit==3.0.47
     # via ipython
